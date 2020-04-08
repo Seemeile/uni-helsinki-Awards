@@ -1,6 +1,7 @@
 import React from 'react'
 import { LineChart, XAxis, CartesianGrid, Line, Tooltip } from 'recharts'
 import { Dropdown, Icon, Menu, Segment } from 'semantic-ui-react'
+import Papa from 'papaparse'
 
 const data = [
     { name: 'Page A', uv: 1000, pv: 2400, amt: 2400, uvError: [75, 20] },
@@ -15,7 +16,30 @@ const data = [
     { name: 'Page J', uv: 189, pv: 4800, amt: 2400, uvError: [15, 60] },
   ];
 
+const readDataDSV = async (): Promise<any> => {
+    return new Promise((resolve, reject) => {
+        try {
+            Papa.parse('./data/the_emmy_awards.csv', {
+                header: true,
+                download: true,
+                skipEmptyLines: true,
+                error(error) {
+                    reject(error)
+                },
+                complete(results) {
+                    resolve(results)
+                },
+            })
+        } catch (error) {
+            reject(error)
+        }
+    })
+}
+
 export default function Dashboard() {
+    
+    readDataDSV().then(results => console.log(results))
+
     return (
         <>
             <Menu attached='top'>
