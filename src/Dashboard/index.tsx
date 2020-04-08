@@ -2,6 +2,10 @@ import React from 'react'
 import { LineChart, XAxis, CartesianGrid, Line, Tooltip } from 'recharts'
 import { Dropdown, Icon, Menu, Segment } from 'semantic-ui-react'
 import Papa from 'papaparse'
+import axios from 'axios'
+
+const {StringStream} = require("scramjet");
+const request = require("request");
 
 const data = [
     { name: 'Page A', uv: 1000, pv: 2400, amt: 2400, uvError: [75, 20] },
@@ -19,7 +23,7 @@ const data = [
 const readDataDSV = async (): Promise<any> => {
     return new Promise((resolve, reject) => {
         try {
-            Papa.parse('./data/the_emmy_awards.csv', {
+            Papa.parse('https://github.com/Seemeile/uni-helsinki-prj_movieawards/raw/master/src/data/the_oscar_award.csv', {
                 header: true,
                 download: true,
                 skipEmptyLines: true,
@@ -36,9 +40,20 @@ const readDataDSV = async (): Promise<any> => {
     })
 }
 
+const readCSV = async (): Promise<any> => {
+    return axios.get("https://dog.ceo/api/breeds/list/all")
+}
+
 export default function Dashboard() {
     
-    readDataDSV().then(results => console.log(results))
+    //readDataDSV().then(results => console.log(results))
+
+    readCSV().then(res => console.log(res))
+
+    //console.log(request.get("https://srv.example.com/main.csv"))
+        //.pipe(new StringStream())                       // pass to stream
+        //.CSVParse()                                   // parse into objects
+        //.then(() => console.log("all done"))
 
     return (
         <>
