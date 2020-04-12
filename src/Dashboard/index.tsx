@@ -1,27 +1,11 @@
-import React, { useState, useCallback } from 'react'
-import { LineChart, XAxis, CartesianGrid, Line, Tooltip } from 'recharts'
-import { Dropdown, Menu, Loader } from 'semantic-ui-react'
+import React, { useState, useCallback, useEffect, useMemo, useReducer } from 'react'
+import { LineChart, XAxis, CartesianGrid, Line, Tooltip, Brush, Surface, ComposedChart, Bar } from 'recharts'
+import { Dropdown, Menu, Loader, Table, Label, Header, Image, PlaceholderParagraph, Placeholder } from 'semantic-ui-react'
 import Papa from 'papaparse'
-
-type dataRow = {
-    year: string,
-    category: string,
-    winner: string,
-    name: string,
-    work: string,
-    'p:gender': string,
-    'p:birthday': string,
-    'p:birthplace': string,
-    'p:deathday': string,
-    'p:popularity': string,
-    'p:biography': string,
-    'p:knownForDepartment': string,
-    'p:profilePath': string,
-    'w:posterPath': string,
-    'w:genreIds': string,
-    'w:popularity': string,
-    'w:overview': string
-}
+import AwardTable from './AwardTable'
+import { DataRow } from '../types/Types'
+import PersonDetail from './PersonDetail'
+import WorkDetail from './WorkDetail'
 
 const data = [
     { name: 'Page A', uv: 1000, pv: 2400, amt: 2400, uvError: [75, 20] },
@@ -36,7 +20,7 @@ const data = [
     { name: 'Page J', uv: 189, pv: 4800, amt: 2400, uvError: [15, 60] },
   ];
 
-const readCSVData = async (filename: string): Promise<dataRow[]> => {
+const readCSVData = async (filename: string): Promise<DataRow[]> => {
     return new Promise((resolve, reject) => {
         try {
             const githubBase = 'https://raw.githubusercontent.com/Seemeile/uni-helsinki-prj_awards/master/src/data/'
@@ -57,17 +41,87 @@ const readCSVData = async (filename: string): Promise<dataRow[]> => {
     })
 }
 
+const createInitialState = (): ReducerStateProps => {
+    return {
+        detailRow: {
+            year: '',
+            category: '',
+            winner: '',
+            name: '',
+            work: '',
+            'p:gender': '',
+            'p:birthday': '',
+            'p:birthplace': '',
+            'p:deathday': '',
+            'p:popularity': '',
+            'p:biography': '',
+            'p:knownForDepartment': 'Select a person to get detailed information',
+            'p:profilePath': '',
+            'w:posterPath': '',
+            'w:genreIds': '',
+            'w:popularity': '',
+            'w:overview': ''
+        },
+        detailView: 'person'
+    }
+}
+
+type ReducerStateProps = {
+    detailRow: DataRow
+    detailView: 'person' | 'work'
+}
+
+type ReducerActionProps = {
+    type: 'setDetail'
+    payload: { detailRow: DataRow, detailView: 'person' | 'work' }
+}
+
+const reducer = (state: ReducerStateProps, action: ReducerActionProps) => {
+    switch (action.type) {
+        case 'setDetail':
+            return { ...state, detailRow: action.payload.detailRow, detailView: action.payload.detailView }
+        default:
+            return state
+    }
+}
+
 export default function Dashboard() {
+    const initialData: DataRow[] = []
     const [pending, setPending] = useState(false)
-    const [dataState, setDataState] = useState([{}])
+    const [dataState, setDataState] = useState(initialData)
+    const [brushState, setBrushState] = useState({startIndex: 0, endIndex: 0})
+    
+    const [state, dispatch] = useReducer(reducer, createInitialState())
+
+    const uniqueYears = useMemo(() => {
+        return Array.from(new Set(dataState.map((row: DataRow) => row.year)))
+    }, [dataState])
 
     const handleDatasetOscarAwardClick = useCallback(async () => {
         setPending(true)
-        const results: dataRow[] = await readCSVData('the_oscar_award.csv')
-        const year1928: dataRow[] = results.filter(row => row.year === '1928') // TEST
-        setDataState(year1928)
+        const results: DataRow[] = await readCSVData('the_oscar_award.csv')
+        //const year1928: dataRow[] = results.filter(row => row.year === '1928' || row.year === '1929' || row.year === '1930') // TEST
+        setDataState(results)
         setPending(false)
     }, [setDataState])
+
+    const updateBrush = useCallback((newState) => {
+        setBrushState(newState)
+    }, [])
+
+    useEffect(() => {
+        if (uniqueYears && uniqueYears.length) {
+            updateBrush({startIndex: 0, endIndex: uniqueYears.length - 1})
+        }
+    }, [uniqueYears, dataState, updateBrush])
+
+    const showPersonDetail = useCallback((row: DataRow) => {
+        dispatch({ type: 'setDetail', payload: {detailRow: row, detailView: 'person'} })
+    }, [dispatch])
+
+    const showWorkDetail = useCallback((row: DataRow) => {
+        dispatch({ type: 'setDetail', payload: {detailRow: row, detailView: 'work'} })
+    }, [dispatch])
 
     return (
         <>
@@ -96,17 +150,41 @@ export default function Dashboard() {
                     </div>
                 </Menu.Menu>
             </Menu>
-            <LineChart
-                width={1200}
-                height={400}
-                data={dataState}
-                margin={{ top: 5, right: 20, left: 10, bottom: 5 }}
-            >
-                <XAxis dataKey="name" />
-                <Tooltip />
-                <CartesianGrid stroke="#f5f5f5" />
-                <Line type="monotone" dataKey="p:birthday" stroke="#ff7300" yAxisId={0} />
-            </LineChart>
+            {dataState.length !== 0 ?
+                <div style={{width: '90%', marginLeft: '5%', marginTop: '10px', display: 'flex', flexDirection: 'row'}}>
+                    <div style={{width: '80%'}}>
+                        <AwardTable 
+                            dataRows={dataState.filter(row => row.year === '2020')}
+                            showPersonDetail={showPersonDetail}
+                            showWorkDetail={showWorkDetail}
+                        />
+                    </div>
+                    <div style={{width: '20%', marginLeft: '10px'}}>
+                        {state.detailView === 'person' ?
+                            <PersonDetail dataRow={state.detailRow}/>
+                            :
+                            <WorkDetail dataRow={state.detailRow}/>
+                        }
+                    </div>
+                </div>
+            :
+                <div style={{width: '100%', marginTop: '100px', textAlign: 'center'}}> 
+                    <label>Please select a dataset</label>
+                </div>
+            }
+            <Surface width={800} height={200}>
+                <Brush
+                    startIndex={brushState.startIndex}
+                    endIndex={brushState.endIndex}
+                    x={100}
+                    y={50}
+                    width={400}
+                    height={40}
+                    data={uniqueYears}
+                    onChange={updateBrush}
+                    tickFormatter={(index) => uniqueYears[index]}
+                />
+            </Surface>
         </>
     )
 }
