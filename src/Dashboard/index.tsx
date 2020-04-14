@@ -6,6 +6,8 @@ import AwardTable from './AwardTable'
 import { DataRow } from '../types/Types'
 import PersonDetail from './PersonDetail'
 import WorkDetail from './WorkDetail'
+import YearSlider from './YearSlider'
+import ForceGraph2D from 'react-force-graph-2d'
 
 const data = [
     { name: 'Page A', uv: 1000, pv: 2400, amt: 2400, uvError: [75, 20] },
@@ -123,6 +125,35 @@ export default function Dashboard() {
         dispatch({ type: 'setDetail', payload: {detailRow: row, detailView: 'work'} })
     }, [dispatch])
 
+    const categories = useMemo(() => {
+        return Array.from(new Set(dataState.map((row: DataRow) => {
+            if (row.year === '2020') {
+                return row.category
+            } else {
+                return ''
+            }
+        })))
+    }, [dataState])
+
+    const persons = useMemo(() => {
+        return Array.from(new Set(dataState.map((row: DataRow) => {
+            if (row.year === '2020') {
+                return row.name
+            } else {
+                return ''
+            }
+        })))
+    }, [dataState])
+
+    const yearData = useMemo(() => {
+        return dataState.filter(row => row.year === '2020')
+    }, [dataState])
+
+    const personLinks = useMemo(() => {
+        return yearData.map(row => { return { 'source': row.category, 'target': row.name }})
+    }, [dataState])
+
+
     return (
         <>
             <Menu attached='top'>
@@ -151,21 +182,42 @@ export default function Dashboard() {
                 </Menu.Menu>
             </Menu>
             {dataState.length !== 0 ?
-                <div style={{width: '90%', marginLeft: '5%', marginTop: '10px', display: 'flex', flexDirection: 'row'}}>
-                    <div style={{width: '80%'}}>
-                        <AwardTable 
-                            dataRows={dataState.filter(row => row.year === '2020')}
-                            showPersonDetail={showPersonDetail}
-                            showWorkDetail={showWorkDetail}
-                        />
+                <div style={{width: '100%', marginTop: '10px', display: 'flex', flexDirection: 'row'}}>
+                    <div style={{width: '8%'}}>
+                        <YearSlider dataRows={dataState}/>     
                     </div>
-                    <div style={{width: '20%', marginLeft: '10px'}}>
+                    <div style={{marginLeft: '50px'}}>
+                        <ForceGraph2D
+                            graphData={
+                                {
+                                    "nodes": [
+                                        { 'id': '2020' },
+                                        ...categories.map(category => { return { 'id': category} }),
+                                        ...persons.map(person => { return {'id': person}})
+                                    ],
+                                    "links": [
+                                        ...categories.map(category => { return { 'source': '2020', 'target': category }}),
+                                        ...personLinks
+                                    ]
+                                }
+                            }
+                            nodeLabel="id"
+                            nodeAutoColorBy='group'
+                            nodeCanvasObject={(node, ctx, globalScale) => {
+                                const fontSize = 12/globalScale;
+                                ctx.font = `${fontSize}px Sans-Serif`;
+                                ctx.textAlign = 'center'
+                                ctx.textBaseline = 'middle'
+                                ctx.fillText('' + node.id, node.x || 0, node.y || 0)
+                            }}
+                        />,
+                    </div>
                         {state.detailView === 'person' ?
                             <PersonDetail dataRow={state.detailRow}/>
                             :
                             <WorkDetail dataRow={state.detailRow}/>
                         }
-                    </div>
+
                 </div>
             :
                 <div style={{width: '100%', marginTop: '100px', textAlign: 'center'}}> 
@@ -188,3 +240,11 @@ export default function Dashboard() {
         </>
     )
 }
+
+/*
+<AwardTable 
+                            dataRows={dataState.filter(row => row.year === '2020')}
+                            showPersonDetail={showPersonDetail}
+                            showWorkDetail={showWorkDetail}
+                        />
+*/
