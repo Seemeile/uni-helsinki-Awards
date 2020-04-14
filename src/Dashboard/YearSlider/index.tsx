@@ -41,12 +41,12 @@ export default function YearSlider({dataRows}: YearSliderProps) {
     }, [sliderState, setSliderState]);
 
     return (
-        <div style={{height: '700px'}}>
+        <div style={{marginLeft: '15px', marginRight: '15px', width: '100%'}}>
             <Slider
                 min={sliderState.domain[0]}
                 max={sliderState.domain[1]}
                 value={sliderState.value}
-                orientation='vertical'        
+                orientation='horizontal'
                 labels={sliderState.labels}        
                 onChange={onSliderChange}
             />

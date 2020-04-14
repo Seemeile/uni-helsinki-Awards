@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect, useMemo } from 'react'
 import { Table, Image, Header, Label, Icon, Segment, Card } from 'semantic-ui-react'
-import { DataRow } from '../types/Types'
+import { DataRow } from '../../types/Types'
 import styled from 'styled-components'
 
 const SelectableCell = styled(Table.Cell)`

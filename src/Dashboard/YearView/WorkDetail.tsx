@@ -1,23 +1,23 @@
 import React from 'react'
 import { Image, Card } from 'semantic-ui-react'
-import { DataRow } from '../types/Types'
+import { DataRow } from '../../types/Types'
 
-type PersonDetailProps = {
+type WorkDetailProps = {
     dataRow: DataRow
 }
 
-export default function PersonDetail({dataRow}: PersonDetailProps) {
+export default function WorkDetail({dataRow}: WorkDetailProps) {
     return (
         <Card style={{height: '700px'}}>
-            <Image src={dataRow["p:profilePath"]} wrapped ui={false} />
+            <Image src={dataRow["w:posterPath"]} wrapped ui={false} />
             <Card.Content style={{height: '100%'}}>
-                <Card.Header>{dataRow.name}</Card.Header>
+                <Card.Header>{dataRow.work}</Card.Header>
                 <Card.Meta>
-                    <span>{dataRow["p:knownForDepartment"]}</span>
+                    <span>{dataRow["w:genreIds"]}</span>
                 </Card.Meta>
-                {dataRow["p:biography"] ?
+                {dataRow["w:overview"] ?
                     <Card.Description style={{height: '250px', overflowY: 'scroll'}}>
-                        {dataRow["p:biography"]}
+                        {dataRow["w:overview"]}
                     </Card.Description>
                 : ''}
             </Card.Content>
