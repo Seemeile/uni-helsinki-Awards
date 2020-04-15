@@ -1,9 +1,21 @@
 import React, { useCallback, useReducer, useMemo } from 'react'
 import { Brush, Surface, CartesianAxis } from 'recharts'
-import { Dropdown, Menu, Icon, Label } from 'semantic-ui-react'
+import { Dropdown, Menu, Icon, Label, Loader } from 'semantic-ui-react'
 import Papa from 'papaparse'
 import { DataRow } from '../types/Types'
 import YearView from './YearView'
+import styled from 'styled-components'
+import HelpModal from './HelpModal'
+import RangeView from './RangeView'
+
+const ClickableMenuItem = styled(Menu.Item)`
+    @media (hover: hover) {
+        :hover {
+            background: #f2f3f4;
+            cursor: pointer;
+        }
+    }
+`
 
 const readCSVData = async (filename: string): Promise<DataRow[]> => {
     return new Promise((resolve, reject) => {
@@ -30,31 +42,34 @@ const createInitialState = (): ReducerStateProps => {
     return {
         datasetTitle: 'Select dataset',
         dataset: [],
-        detailRow: {
-            year: '',
-            category: '',
-            winner: '',
-            name: '',
-            work: '',
-            'p:gender': '',
-            'p:birthday': '',
-            'p:birthplace': '',
-            'p:deathday': '',
-            'p:popularity': '',
-            'p:biography': '',
-            'p:knownForDepartment': 'Select a person to get detailed information',
-            'p:profilePath': '',
-            'w:posterPath': '',
-            'w:genreIds': '',
-            'w:popularity': '',
-            'w:overview': ''
+        detail: {
+            data: {
+                year: '',
+                category: '',
+                winner: '',
+                name: '',
+                work: '',
+                'p:gender': '',
+                'p:birthday': '',
+                'p:birthplace': '',
+                'p:deathday': '',
+                'p:popularity': '',
+                'p:biography': 'Select a person to get detailed information',
+                'p:knownForDepartment': '',
+                'p:profilePath': '',
+                'w:posterPath': '',
+                'w:genreIds': '',
+                'w:popularity': '',
+                'w:overview': ''
+            },
+            view: 'person'
         },
-        detailView: 'person',
         brush: {
             data: [],
             startIndex: 0,
             endIndex: 0,
         },
+        helpModal: false,
         pending: false
     }
 }
@@ -62,19 +77,25 @@ const createInitialState = (): ReducerStateProps => {
 type ReducerStateProps = {
     datasetTitle: string
     dataset: DataRow[]
-    detailRow: DataRow
-    detailView: 'person' | 'work'
+    detail: {
+        data: DataRow
+        view: 'person' | 'work'
+    }
     brush: {
-        data: string[],
-        startIndex: number,
+        data: string[]
+        startIndex: number
         endIndex: number
     },
+    helpModal: boolean
     pending: boolean
 }
 
 type ReducerActionProps = {
+    type: 'reset'
+    payload: ReducerStateProps
+} | {
     type: 'setDetail'
-    payload: { detailRow: DataRow, detailView: 'person' | 'work' }
+    payload: { data: DataRow, view: 'person' | 'work' }
 } | {
     type: 'setDataset'
     payload: { datasetTitle: string, dataset: DataRow[] }
@@ -84,22 +105,41 @@ type ReducerActionProps = {
 } | {
     type: 'setBrush'
     payload: { data: string[], startIndex: number, endIndex: number }
+} | {
+    type: 'setHelpModal'
+    payload: { helpModal: boolean }
 }
 
 const reducer = (state: ReducerStateProps, action: ReducerActionProps) => {
     switch (action.type) {
+        case 'reset':
+            return action.payload
         case 'setDataset':
             return { ...state, datasetTitle: action.payload.datasetTitle, dataset: action.payload.dataset }
         case 'setDetail':
-            return { ...state, detailRow: action.payload.detailRow, detailView: action.payload.detailView }
+            return { 
+                ...state, 
+                detail: {
+                    data: action.payload.data,
+                    view: action.payload.view
+                }
+            }
         case 'setPending':
             return { ...state, pending: action.payload.pending }
         case 'setBrush':
-            return { ...state, brush: {
-                data: action.payload.data,
-                startIndex: action.payload.startIndex,
-                endIndex: action.payload.endIndex
-            }}
+            return { 
+                ...state, 
+                brush: {
+                    data: action.payload.data,
+                    startIndex: action.payload.startIndex,
+                    endIndex: action.payload.endIndex
+                }
+            }
+        case 'setHelpModal':
+            return {
+                ...state,
+                helpModal: action.payload.helpModal
+            }
         default:
             return state
     }
@@ -107,6 +147,14 @@ const reducer = (state: ReducerStateProps, action: ReducerActionProps) => {
 
 export default function Dashboard() {
     const [state, dispatch] = useReducer(reducer, createInitialState())
+
+    const handleHelpModalClick = useCallback(() => {
+        dispatch({ type: 'setHelpModal', payload: { helpModal: true }})
+    }, [dispatch])
+
+    const handleHelpModalClose = useCallback(() => {
+        dispatch({ type: 'setHelpModal', payload: { helpModal: false }})
+    }, [dispatch])
 
     const changeDataset = useCallback(async (title: string, filename: string) => {
         dispatch({ type: 'setPending', payload: { pending: true }})
@@ -122,7 +170,7 @@ export default function Dashboard() {
     }, [dispatch])
 
     const handleOscarAwardsSelect = useCallback(() => {
-        changeDataset('The Oscar Awards 1928 - 2020', 'the_oscar_award.csv')
+        changeDataset('Oscar Awards 1928 - 2020', 'the_oscar_award.csv')
     }, [changeDataset])
 
     const handleEmmyAwardsSelect = useCallback(() => {
@@ -161,9 +209,6 @@ export default function Dashboard() {
         }
     }, [state.brush])
 
-    console.log(selectedYears.year1)
-    console.log(selectedYears.year2)
-
     return (
         <>
             <Menu attached='top' size='large'>
@@ -192,47 +237,48 @@ export default function Dashboard() {
                                 minTickGap={40}
                                 viewBox={{ x: 0, y: 0, width: 900, height: 30 }}
                                 ticks={getBrushTicks}
+                                fontSize={10}
                             />
                         </Brush>
                     </Surface>
                 </Menu.Item>
-                <Menu.Item position='right'>
-                    <Icon size='big' name='help circle'/>
-                </Menu.Item>
+                <div style={{width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+                    {state.pending ?
+                        <Loader active inline size='small' />
+                    :
+                        selectedYears.year1 !== selectedYears.year2 ?
+                            <label>{selectedYears.year1} - {selectedYears.year2}</label>
+                        : 
+                            <label>{selectedYears.year1}</label>
+                    }
+                </div>
+                <ClickableMenuItem position='right' onClick={handleHelpModalClick}>
+                    <div style={{display: 'flex', justifyContent: 'center'}}>
+                        <Icon size='big' name='help circle'/>
+                    </div>
+                </ClickableMenuItem>
             </Menu>
             {state.dataset.length !== 0 && !state.pending ?
                 selectedYears.year1 === selectedYears.year2 ?
                     <YearView 
                         dataRows={state.dataset.filter(row => row.year === selectedYears.year1)} 
-                        detailRow={state.detailRow} 
-                        detailView={state.detailView}
+                        detailRow={state.detail.data} 
+                        detailView={state.detail.view}
                         dispatch={dispatch}
                     />
-                : <label>range</label>
+                :
+                    <RangeView
+                        dataRows={state.dataset.filter(row => row.year >= selectedYears.year1 && row.year <= selectedYears.year2)}
+                    />
             :
                 <div style={{width: '100%', marginTop: '100px', textAlign: 'center'}}> 
                     <Label>Please select a dataset</Label>
                 </div>
             }
+            <HelpModal open={state.helpModal} handleHelpModalClose={handleHelpModalClose}/>
         </>
     )
 }
-
-/*
-{state.pending ? (
-                    <div style={{marginTop: '8px', marginLeft: '8px'}}>
-                        <Loader active inline size='small' />
-                    </div>)
-                : ''}
-*/
-
-/*
-<AwardTable 
-                            dataRows={dataState.filter(row => row.year === '2020')}
-                            showPersonDetail={showPersonDetail}
-                            showWorkDetail={showWorkDetail}
-                        />
-*/
 
 /*
 <ForceGraph2D
@@ -259,20 +305,4 @@ export default function Dashboard() {
                                 ctx.fillText('' + node.id, node.x || 0, node.y || 0)
                             }}
                         />,
-*/
-
-/*
-<Surface width={800} height={200}>
-                <Brush
-                    startIndex={brushState.startIndex}
-                    endIndex={brushState.endIndex}
-                    x={100}
-                    y={50}
-                    width={400}
-                    height={40}
-                    data={uniqueYears}
-                    onChange={updateBrush}
-                    tickFormatter={(index) => uniqueYears[index]}
-                />
-            </Surface>
 */

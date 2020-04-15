@@ -12,9 +12,11 @@ export default function PersonDetail({dataRow}: PersonDetailProps) {
             <Image src={dataRow["p:profilePath"]} wrapped ui={false} />
             <Card.Content style={{height: '100%'}}>
                 <Card.Header>{dataRow.name}</Card.Header>
-                <Card.Meta>
-                    <span>{dataRow["p:knownForDepartment"]}</span>
-                </Card.Meta>
+                {dataRow["p:knownForDepartment"] ? 
+                    <Card.Meta>    
+                        <span>Known for: {dataRow["p:knownForDepartment"]}</span>
+                    </Card.Meta>
+                : ''}
                 {dataRow["p:biography"] ?
                     <Card.Description style={{height: '250px', overflowY: 'scroll'}}>
                         {dataRow["p:biography"]}

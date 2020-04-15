@@ -13,15 +13,15 @@ type YearViewProps = {
 
 export default function YearView({dataRows, detailView, detailRow, dispatch}: YearViewProps) {
     const showPersonDetail = useCallback((row: DataRow) => {
-        dispatch({ type: 'setDetail', payload: {detailRow: row, detailView: 'person'} })
+        dispatch({ type: 'setDetail', payload: {data: row, view: 'person'} })
     }, [dispatch])
 
     const showWorkDetail = useCallback((row: DataRow) => {
-        dispatch({ type: 'setDetail', payload: {detailRow: row, detailView: 'work'} })
+        dispatch({ type: 'setDetail', payload: {data: row, view: 'work'} })
     }, [dispatch])
 
     return (
-        <div style={{width: '80%', marginTop: '10px', display: 'flex', flexDirection: 'row'}}>
+        <div style={{width: '90%', marginTop: '10px', marginLeft: '5%', display: 'flex', flexDirection: 'row'}}>
             <div style={{width: '80%'}}>
                 <AwardTable
                     dataRows={dataRows}
@@ -29,7 +29,7 @@ export default function YearView({dataRows, detailView, detailRow, dispatch}: Ye
                     showWorkDetail={showWorkDetail}
                 />
             </div>
-            <div style={{width: '20%'}}>>
+            <div style={{width: '20%'}}>
                 {detailView === 'person' ?
                     <PersonDetail dataRow={detailRow}/>
                     :
