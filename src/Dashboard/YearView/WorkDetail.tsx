@@ -8,7 +8,7 @@ type WorkDetailProps = {
 
 export default function WorkDetail({dataRow}: WorkDetailProps) {
     return (
-        <Card style={{height: '700px'}}>
+        <Card style={{height: window.innerHeight - 100}}>
             <Image src={dataRow["w:posterPath"]} wrapped ui={false} />
             <Card.Content style={{height: '100%'}}>
                 <Card.Header>{dataRow.work}</Card.Header>

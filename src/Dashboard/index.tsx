@@ -170,7 +170,7 @@ export default function Dashboard() {
     }, [dispatch])
 
     const handleOscarAwardsSelect = useCallback(() => {
-        changeDataset('Oscar Awards 1928 - 2020', 'the_oscar_award.csv')
+        changeDataset('Oscar Awards 1928 - 2020', 'the_oscar_awards.csv')
     }, [changeDataset])
 
     const handleEmmyAwardsSelect = useCallback(() => {
@@ -211,7 +211,7 @@ export default function Dashboard() {
 
     return (
         <>
-            <Menu attached='top' size='large'>
+            <Menu inverted attached='top' size='large'>
                 <Dropdown item simple text={state.datasetTitle}>
                     <Dropdown.Menu>
                         <Dropdown.Item onClick={handleOscarAwardsSelect}>Oscar Awards 1928 - 2020</Dropdown.Item>
@@ -219,7 +219,7 @@ export default function Dashboard() {
                         <Dropdown.Item onClick={handleGoldenGlobeAwardsSelect}>Golden Globe Awards 1944 - 2020</Dropdown.Item>
                     </Dropdown.Menu>
                 </Dropdown>
-                <Menu.Item>
+                <Menu.Item >
                     <Surface width={900} height={50}>
                         <Brush
                             startIndex={state.brush.startIndex}
@@ -247,9 +247,11 @@ export default function Dashboard() {
                         <Loader active inline size='small' />
                     :
                         selectedYears.year1 !== selectedYears.year2 ?
-                            <label>{selectedYears.year1} - {selectedYears.year2}</label>
+                            <label style={{color: 'white'}}>
+                                {selectedYears.year1} - {selectedYears.year2}
+                            </label>
                         : 
-                            <label>{selectedYears.year1}</label>
+                            <label style={{color: 'white'}}>{selectedYears.year1}</label>
                     }
                 </div>
                 <ClickableMenuItem position='right' onClick={handleHelpModalClick}>

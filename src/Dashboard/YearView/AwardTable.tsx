@@ -42,8 +42,8 @@ export default function AwardTable({dataRows, showPersonDetail, showWorkDetail}:
     }, [dataRows, categoryCache])
 
     return (
-        <div style={{height: '700px', overflowY: 'scroll'}}>
-            <Table celled>
+        <div style={{height: window.innerHeight - 100, overflowY: 'scroll'}}>
+            <Table inverted celled>
                 <Table.Header>
                     <Table.Row>
                         <Table.HeaderCell>Category</Table.HeaderCell>

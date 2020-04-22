@@ -8,17 +8,17 @@ type PersonDetailProps = {
 
 export default function PersonDetail({dataRow}: PersonDetailProps) {
     return (
-        <Card style={{height: '700px'}}>
+        <Card style={{height: window.innerHeight - 100, backgroundColor: '#333'}}>
             <Image src={dataRow["p:profilePath"]} wrapped ui={false} />
             <Card.Content style={{height: '100%'}}>
-                <Card.Header>{dataRow.name}</Card.Header>
+                <Card.Header style={{color: 'rgba(255,255,255,.9)'}}>{dataRow.name}</Card.Header>
                 {dataRow["p:knownForDepartment"] ? 
-                    <Card.Meta>    
+                    <Card.Meta style={{color: 'rgba(255,255,255,.9)'}}>
                         <span>Known for: {dataRow["p:knownForDepartment"]}</span>
                     </Card.Meta>
                 : ''}
                 {dataRow["p:biography"] ?
-                    <Card.Description style={{height: '250px', overflowY: 'scroll'}}>
+                    <Card.Description style={{height: '250px', overflowY: 'scroll', color: 'rgba(255,255,255,.9)'}}>
                         {dataRow["p:biography"]}
                     </Card.Description>
                 : ''}
