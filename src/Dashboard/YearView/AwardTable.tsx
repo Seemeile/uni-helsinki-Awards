@@ -43,7 +43,7 @@ export default function AwardTable({dataRows, showPersonDetail, showWorkDetail}:
 
     return (
         <div style={{height: window.innerHeight - 100, overflowY: 'scroll'}}>
-            <Table inverted celled>
+            <Table celled>
                 <Table.Header>
                     <Table.Row>
                         <Table.HeaderCell>Category</Table.HeaderCell>
@@ -57,14 +57,14 @@ export default function AwardTable({dataRows, showPersonDetail, showWorkDetail}:
                         return (
                             <Table.Row key={index}>
                                 {getCategoryRow(row)}
-                                <SelectableCell style={{display: 'flex', flexDirection: 'row'}} onClick={() => showPersonDetail(row)}>
-                                    {row.winner === 'True' ? 
-                                        <Label ribbon style={{height: '50%', marginTop: '8px'}}>Winner</Label> 
-                                    : ''}
+                                <SelectableCell style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}} onClick={() => showPersonDetail(row)}>
                                     <Image rounded avatar src={row["p:profilePath"]} size='mini' />
-                                    <div style={{marginLeft: '8px', marginTop: '15px'}}>
+                                    <div style={{marginLeft: '8px'}}>
                                         {row.name}
                                     </div>
+                                    {row.winner === 'True' ? 
+                                        <Icon name='winner' color='yellow' style={{marginLeft: '8px'}}/>
+                                    : ''}
                                 </SelectableCell>
                                 <Table.Cell>{getGenderIcon(row["p:gender"])}</Table.Cell>
                                 <SelectableCell onClick={() => showWorkDetail(row)}>{row.work}</SelectableCell>

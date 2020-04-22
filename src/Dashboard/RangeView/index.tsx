@@ -2,6 +2,7 @@ import React, { useCallback, useMemo, useState } from 'react'
 import { DataRow } from '../../types/Types'
 import { Label, Grid, Segment, Dropdown, Header } from 'semantic-ui-react'
 import { BarChart, YAxis, XAxis, Tooltip, Bar } from 'recharts'
+import Comparison from './Comparison'
 
 const groupBy = (data: Array<any>, key: any) => {
     return data.reduce((storage, item) => {
@@ -18,9 +19,10 @@ const groupBy = (data: Array<any>, key: any) => {
 
 type RangeViewProps = {
     dataRows: DataRow[]
+    onYearChange: (year: number) => void
 }
 
-export default function RangeView({dataRows}: RangeViewProps) {
+export default function RangeView({dataRows, onYearChange}: RangeViewProps) {
     const toplistOptions = useMemo(() => {
         return [{
             key: 'Most wins by name',
@@ -30,6 +32,14 @@ export default function RangeView({dataRows}: RangeViewProps) {
             key: 'Most nominations by name',
             text: 'Most nominations by name',
             value: 'Most nominations by name'
+        }]
+    }, [])
+
+    const comparisonOptions = useMemo(() => {
+        return [{
+            key: 'Gender',
+            text: 'Gender',
+            value: 'Gender'
         }]
     }, [])
 
@@ -70,9 +80,14 @@ export default function RangeView({dataRows}: RangeViewProps) {
 
     return (
         <div style={{margin: '10px 10px 10px 10px'}}>
-            <Grid columns='3'>
-                <Grid.Column>
+            <Grid>
+                <Grid.Column width='10'>
                     <Segment color='red'>
+                        <Comparison dataRows={dataRows} onClick={onYearChange}/>
+                    </Segment>
+                </Grid.Column>
+                <Grid.Column width='6'>
+                    <Segment color='green'>
                         <Header>Toplists</Header>
                         <Dropdown
                             fluid
@@ -82,58 +97,16 @@ export default function RangeView({dataRows}: RangeViewProps) {
                             onChange={(e, {value}) => handleToplistChange(value)}
                         />
                         <BarChart
-                            width={300}
+                            width={450}
                             height={400}
                             data={getToplistData}
-                            margin={{ top: 20, right: 20, bottom: 20, left: 20 }}
+                            margin={{ top: 20, right: 20, bottom: 20, left: 30 }}
                             layout='vertical'
                         >
-                            <XAxis type='number' name='wins'/>
-                            <YAxis dataKey='name' type='category' name='name'/>
-                            <Tooltip />
-                            <Bar dataKey='wins' fill='#db2828' maxBarSize={20} label radius={[10, 10, 10, 10]} />
-                        </BarChart>
-                    </Segment>
-                </Grid.Column>
-                <Grid.Column>
-                    <Segment color='green'>
-                        <Header>Toplists</Header>
-                        <Dropdown
-                            placeholder='Choose Toplist'
-                            fluid
-                            selection
-                        />
-                        <BarChart
-                            width={300}
-                            height={400}
-                            margin={{ top: 20, right: 20, bottom: 20, left: 20 }}
-                            layout='vertical'
-                        >
-                            <XAxis type='number' name='wins'/>
+                            <XAxis dataKey='wins' type='number' name='wins'/>
                             <YAxis dataKey='name' type='category' name='name'/>
                             <Tooltip />
                             <Bar dataKey='wins' fill='#21ba45' maxBarSize={20} label radius={[10, 10, 10, 10]} />
-                        </BarChart>
-                    </Segment>
-                </Grid.Column>
-                <Grid.Column>
-                    <Segment color='blue'>
-                        <Header>Toplists</Header>
-                        <Dropdown
-                            placeholder='Choose Toplist'
-                            fluid
-                            selection
-                        />
-                        <BarChart
-                            width={300}
-                            height={400}
-                            margin={{ top: 20, right: 20, bottom: 20, left: 20 }}
-                            layout='vertical'
-                        >
-                            <XAxis type='number' name='wins'/>
-                            <YAxis dataKey='name' type='category' name='name'/>
-                            <Tooltip />
-                            <Bar dataKey='wins' fill='#2185d0' maxBarSize={20} label radius={[10, 10, 10, 10]} />
                         </BarChart>
                     </Segment>
                 </Grid.Column>

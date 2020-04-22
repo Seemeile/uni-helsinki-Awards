@@ -209,9 +209,18 @@ export default function Dashboard() {
         }
     }, [state.brush])
 
+    const handleYearChange = useCallback((year: number) => {
+        const brushIndex = state.brush.data
+            .map((brushYear, index) => brushYear === String(year) ? index : null)
+            .filter(Boolean)
+        if (brushIndex.length > 0) {
+            handleBrushUpdate({ startIndex: Number(brushIndex[0]), endIndex: Number(brushIndex[0]) })
+        }
+    }, [state.brush.data, handleBrushUpdate])
+
     return (
         <>
-            <Menu inverted attached='top' size='large'>
+            <Menu attached='top' size='large'>
                 <Dropdown item simple text={state.datasetTitle}>
                     <Dropdown.Menu>
                         <Dropdown.Item onClick={handleOscarAwardsSelect}>Oscar Awards 1928 - 2020</Dropdown.Item>
@@ -222,6 +231,7 @@ export default function Dashboard() {
                 <Menu.Item >
                     <Surface width={900} height={50}>
                         <Brush
+
                             startIndex={state.brush.startIndex}
                             endIndex={state.brush.endIndex}
                             x={0}
@@ -247,11 +257,9 @@ export default function Dashboard() {
                         <Loader active inline size='small' />
                     :
                         selectedYears.year1 !== selectedYears.year2 ?
-                            <label style={{color: 'white'}}>
-                                {selectedYears.year1} - {selectedYears.year2}
-                            </label>
+                            <label>{selectedYears.year1} - {selectedYears.year2}</label>
                         : 
-                            <label style={{color: 'white'}}>{selectedYears.year1}</label>
+                            <label>{selectedYears.year1}</label>
                     }
                 </div>
                 <ClickableMenuItem position='right' onClick={handleHelpModalClick}>
@@ -270,7 +278,10 @@ export default function Dashboard() {
                     />
                 :
                     <RangeView
-                        dataRows={state.dataset.filter(row => row.year >= selectedYears.year1 && row.year <= selectedYears.year2)}
+                        dataRows={
+                            state.dataset.filter(
+                                row => row.year >= selectedYears.year1 && row.year <= selectedYears.year2)}
+                        onYearChange={handleYearChange}
                     />
             :
                 <div style={{width: '100%', marginTop: '100px', textAlign: 'center'}}> 
