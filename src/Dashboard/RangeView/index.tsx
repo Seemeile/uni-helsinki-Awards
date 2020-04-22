@@ -35,14 +35,6 @@ export default function RangeView({dataRows, onYearChange}: RangeViewProps) {
         }]
     }, [])
 
-    const comparisonOptions = useMemo(() => {
-        return [{
-            key: 'Gender',
-            text: 'Gender',
-            value: 'Gender'
-        }]
-    }, [])
-
     const [toplistState, setToplistState] = useState(toplistOptions[0])
 
     const mostWinsByName = useMemo(() => {
@@ -82,7 +74,7 @@ export default function RangeView({dataRows, onYearChange}: RangeViewProps) {
         <div style={{margin: '10px 10px 10px 10px'}}>
             <Grid>
                 <Grid.Column width='10'>
-                    <Segment color='red'>
+                    <Segment color='red' >
                         <Comparison dataRows={dataRows} onClick={onYearChange}/>
                     </Segment>
                 </Grid.Column>

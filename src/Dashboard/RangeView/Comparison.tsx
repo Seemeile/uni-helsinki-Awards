@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo, useState } from 'react'
 import { DataRow } from '../../types/Types'
 import { Label, Grid, Segment, Dropdown, Header } from 'semantic-ui-react'
-import { BarChart, YAxis, XAxis, Tooltip, Bar, AreaChart, Area, LabelList, Legend } from 'recharts'
+import { BarChart, YAxis, XAxis, Tooltip, Bar, AreaChart, Area, LabelList, Legend, TooltipPayload } from 'recharts'
 import { groupBy } from '../../utils/groupBy'
 
 type ComparisonProps = {
@@ -24,7 +24,7 @@ export default function Comparison({dataRows, onClick}: ComparisonProps) {
                     female: years[year].filter((person: DataRow) => person['p:gender'] === 'female').length,
                     other: years[year].filter((person: DataRow) => person['p:gender'] === 'other').length
                 },
-                categories: new Set(years[year].map((row: DataRow) => row.category)).size
+                categories: new Set(years[year].map((row: DataRow) => row.category))
             }
         })
     }, [dataRows])
@@ -33,6 +33,34 @@ export default function Comparison({dataRows, onClick}: ComparisonProps) {
         onClick(activeLabel)
     }, [onClick])
 
+    const categoryTooltipFormatter = useCallback((
+        value: string | number | (string | number)[], 
+        name: string, 
+        entry: TooltipPayload, 
+        index: number
+    ) => {
+        const text: any[] = []
+        text.push(<p>{value}</p>)
+        const currentYear: string = entry.payload.year
+        const prevYear: string = String(Number(currentYear) - 1)
+        const prevYearData = data.find(element => element.year === prevYear)
+        if (prevYearData) {
+            const minus = Array.from(prevYearData.categories).filter(
+                (cat: any) => !Array.from(entry.payload.categories).includes(cat)
+            )
+            const plus = Array.from(entry.payload.categories).filter(
+                (cat: any) => !Array.from(prevYearData.categories).includes(cat)
+            )
+            if (plus.length > 0) {
+                text.push(<p>Added (compared to {prevYear}):<ul>{plus.map((el: any) => <li>{el}</li>)}</ul></p>)
+            }
+            if (minus.length > 0) {
+                text.push(<p>Removed (compared to {prevYear}):<ul>{minus.map((el: any) => <li>{el}</li>)}</ul></p>)
+            }
+        }
+        return (<div>{text.map((el: string) => el)}</div>)
+    }, [data])
+    
     return (
         <>
             <Header>Comparisons</Header>
@@ -60,6 +88,7 @@ export default function Comparison({dataRows, onClick}: ComparisonProps) {
                     <Area
                         stackId="0"
                         type="monotone"
+                        name='male'
                         dataKey="gender.male"
                         stroke="#ff7300"
                         fill="#ff7300"
@@ -68,6 +97,7 @@ export default function Comparison({dataRows, onClick}: ComparisonProps) {
                     <Area
                         stackId="0"
                         type="monotone"
+                        name='female'
                         dataKey="gender.female"
                         stroke="#82ca9d"
                         fill="#82ca9d"
@@ -76,6 +106,7 @@ export default function Comparison({dataRows, onClick}: ComparisonProps) {
                     <Area
                         stackId="0"
                         type="monotone"
+                        name='other'
                         dataKey="gender.other"
                         stroke="#387908"
                         fill="#387908"
@@ -93,15 +124,14 @@ export default function Comparison({dataRows, onClick}: ComparisonProps) {
                     margin={{ top: 20, right: 80, left: 20, bottom: 5 }}
                 >
                     <XAxis dataKey='year'/>
-                    <YAxis yAxisId={0}>
-                        <Label position="top" offset={10}>Nominations</Label>
-                    </YAxis>
-                    <Tooltip/>
+                    <YAxis yAxisId={0}/>
+                    <Tooltip formatter={categoryTooltipFormatter}/>
                     <Legend iconType='rect'/>
                     <Area
                         stackId="0"
                         type="monotone"
-                        dataKey="categories"
+                        name='categories'
+                        dataKey="categories.size"
                         stroke="#ff7300"
                         fill="#ff7300"
                         dot
