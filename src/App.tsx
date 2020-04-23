@@ -5,7 +5,7 @@ import Dashboard from './Dashboard';
 
 function App() {
   return (
-    <div className="App" style={{height: window.innerHeight}}>
+    <div className="App" style={{height: window.innerHeight, backgroundColor: 'black'}}>
       <Dashboard/>
     </div>
   );

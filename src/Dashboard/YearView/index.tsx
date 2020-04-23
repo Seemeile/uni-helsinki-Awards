@@ -3,7 +3,7 @@ import { DataRow } from '../../types/Types'
 import AwardTable from './AwardTable'
 import PersonDetail from './PersonDetail'
 import WorkDetail from './WorkDetail'
-import { Menu, Card, Grid } from 'semantic-ui-react'
+import { Menu, Card, Grid, Segment } from 'semantic-ui-react'
  
 type YearViewProps = {
     dataRows: DataRow[]
@@ -23,8 +23,8 @@ export default function YearView({dataRows, detailRow, dispatch}: YearViewProps)
                     <AwardTable dataRows={dataRows} showDetail={showDetail}/>
                 </Grid.Column>
                 <Grid.Column width='4'>
-                    <Card style={{minWidth: '150px'}}>
-                        <Menu pointing secondary>
+                    <Segment inverted style={{minWidth: '150px', marginTop: '10px'}}>
+                        <Menu inverted pointing secondary>
                             <Menu.Item
                                 name='person'
                                 active={detailView === 'person'}
@@ -41,7 +41,7 @@ export default function YearView({dataRows, detailRow, dispatch}: YearViewProps)
                             :
                             <WorkDetail dataRow={detailRow}/>
                         }
-                    </Card>
+                    </Segment>
                 </Grid.Column>
             </Grid>
         </div>

@@ -35,12 +35,12 @@ export default function AwardTable({dataRows, showDetail}: AwardTableProps) {
     }, [rowsByCategory])
 
     return (
-        <Grid style={{maxHeight: window.innerHeight - 100, overflowY: 'scroll'}}>
+        <Grid style={{marginTop: '10px', maxHeight: window.innerHeight - 100, scrollbarColor: 'white #1b1c1d', overflowY: 'scroll'}}>
             {categoryNamesDivided.map((categoryNames: string[]) =>
-                <Grid.Row columns='2'>
+                <Grid.Row columns='2' style={{paddingTop: '0px'}}>
                     {categoryNames.map((categoryName: string) => 
                         <Grid.Column>
-                            <Table celled>
+                            <Table inverted celled>
                                 <Table.Header>
                                     <Table.Row>
                                         <Table.HeaderCell textAlign='center'>

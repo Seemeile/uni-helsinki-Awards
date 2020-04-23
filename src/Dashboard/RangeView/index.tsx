@@ -74,12 +74,12 @@ export default function RangeView({dataRows, onYearChange}: RangeViewProps) {
         <div style={{margin: '10px 10px 10px 10px'}}>
             <Grid>
                 <Grid.Column width='10'>
-                    <Segment color='red' >
+                    <Segment inverted>
                         <Comparison dataRows={dataRows} onClick={onYearChange}/>
                     </Segment>
                 </Grid.Column>
                 <Grid.Column width='6'>
-                    <Segment color='green'>
+                    <Segment inverted>
                         <Header>Toplists</Header>
                         <Dropdown
                             fluid

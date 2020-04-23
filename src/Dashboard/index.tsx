@@ -211,7 +211,7 @@ export default function Dashboard() {
 
     return (
         <>
-            <Menu attached='top' size='large'>
+            <Menu inverted attached='top' size='large'>
                 <Dropdown item simple text={state.datasetTitle}>
                     <Dropdown.Menu>
                         <Dropdown.Item onClick={handleOscarAwardsSelect}>Oscar Awards 1928 - 2020</Dropdown.Item>
@@ -243,7 +243,7 @@ export default function Dashboard() {
                         </Brush>
                     </Surface>
                 </Menu.Item>
-                <div style={{width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+                <div style={{width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', color: 'white'}}>
                     {state.pending ?
                         <Loader active inline size='small' />
                     :

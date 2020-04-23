@@ -18,7 +18,7 @@ export default function PersonDetail({dataRow}: PersonDetailProps) {
                     </Card.Meta>
                 : ''}
                 {dataRow["p:biography"] ?
-                    <Card.Description style={{maxHeight: '150px', overflowY: 'scroll'}}>
+                    <Card.Description style={{maxHeight: '300px', overflowY: 'scroll', scrollbarColor: 'white #1b1c1d'}}>
                         {dataRow["p:biography"]}
                     </Card.Description>
                 : ''}
