@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo, useState } from 'react'
 import { DataRow } from '../../types/Types'
-import { Label, Grid, Segment, Dropdown, Header } from 'semantic-ui-react'
+import { Grid, Segment, Dropdown, Header } from 'semantic-ui-react'
 import { BarChart, YAxis, XAxis, Tooltip, Bar } from 'recharts'
 import Comparison from './Comparison'
 

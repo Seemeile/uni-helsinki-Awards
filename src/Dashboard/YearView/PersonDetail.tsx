@@ -8,9 +8,9 @@ type PersonDetailProps = {
 
 export default function PersonDetail({dataRow}: PersonDetailProps) {
     return (
-        <Card style={{height: window.innerHeight - 100}}>
+        <>
             <Image src={dataRow["p:profilePath"]} wrapped ui={false} />
-            <Card.Content style={{height: '100%'}}>
+            <Card.Content>
                 <Card.Header>{dataRow.name}</Card.Header>
                 {dataRow["p:knownForDepartment"] ? 
                     <Card.Meta>    
@@ -18,11 +18,11 @@ export default function PersonDetail({dataRow}: PersonDetailProps) {
                     </Card.Meta>
                 : ''}
                 {dataRow["p:biography"] ?
-                    <Card.Description style={{height: '250px', overflowY: 'scroll'}}>
+                    <Card.Description style={{maxHeight: '150px', overflowY: 'scroll'}}>
                         {dataRow["p:biography"]}
                     </Card.Description>
                 : ''}
             </Card.Content>
-        </Card>
+        </>
     )
 }

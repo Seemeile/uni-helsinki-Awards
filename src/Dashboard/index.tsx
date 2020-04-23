@@ -43,26 +43,23 @@ const createInitialState = (): ReducerStateProps => {
         datasetTitle: 'Select dataset',
         dataset: [],
         detail: {
-            data: {
-                year: '',
-                category: '',
-                winner: '',
-                name: '',
-                work: '',
-                'p:gender': '',
-                'p:birthday': '',
-                'p:birthplace': '',
-                'p:deathday': '',
-                'p:popularity': '',
-                'p:biography': 'Select a person to get detailed information',
-                'p:knownForDepartment': '',
-                'p:profilePath': '',
-                'w:posterPath': '',
-                'w:genreIds': '',
-                'w:popularity': '',
-                'w:overview': ''
-            },
-            view: 'person'
+            year: '',
+            category: '',
+            winner: '',
+            name: '',
+            work: '',
+            'p:gender': '',
+            'p:birthday': '',
+            'p:birthplace': '',
+            'p:deathday': '',
+            'p:popularity': '',
+            'p:biography': 'Select a person to get detailed information',
+            'p:knownForDepartment': '',
+            'p:profilePath': '',
+            'w:posterPath': '',
+            'w:genreIds': '',
+            'w:popularity': '',
+            'w:overview': ''
         },
         brush: {
             data: [],
@@ -77,10 +74,7 @@ const createInitialState = (): ReducerStateProps => {
 type ReducerStateProps = {
     datasetTitle: string
     dataset: DataRow[]
-    detail: {
-        data: DataRow
-        view: 'person' | 'work'
-    }
+    detail: DataRow
     brush: {
         data: string[]
         startIndex: number
@@ -95,7 +89,7 @@ type ReducerActionProps = {
     payload: ReducerStateProps
 } | {
     type: 'setDetail'
-    payload: { data: DataRow, view: 'person' | 'work' }
+    payload: DataRow
 } | {
     type: 'setDataset'
     payload: { datasetTitle: string, dataset: DataRow[] }
@@ -119,10 +113,7 @@ const reducer = (state: ReducerStateProps, action: ReducerActionProps) => {
         case 'setDetail':
             return { 
                 ...state, 
-                detail: {
-                    data: action.payload.data,
-                    view: action.payload.view
-                }
+                detail: action.payload
             }
         case 'setPending':
             return { ...state, pending: action.payload.pending }
@@ -272,8 +263,7 @@ export default function Dashboard() {
                 selectedYears.year1 === selectedYears.year2 ?
                     <YearView 
                         dataRows={state.dataset.filter(row => row.year === selectedYears.year1)} 
-                        detailRow={state.detail.data} 
-                        detailView={state.detail.view}
+                        detailRow={state.detail} 
                         dispatch={dispatch}
                     />
                 :

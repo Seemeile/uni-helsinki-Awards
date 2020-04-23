@@ -1,7 +1,9 @@
-import React, { useState, useCallback, useEffect, useMemo } from 'react'
-import { Table, Image, Header, Label, Icon, Segment, Card } from 'semantic-ui-react'
+import React, { useMemo } from 'react'
+import { Table, Image, Icon, Grid } from 'semantic-ui-react'
 import { DataRow } from '../../types/Types'
 import styled from 'styled-components'
+import { groupBy } from '../../utils/groupBy'
+import { toProperCase } from '../../utils/toProperCase'
 
 const SelectableCell = styled(Table.Cell)`
     @media (hover: hover) {
@@ -14,65 +16,60 @@ const SelectableCell = styled(Table.Cell)`
 
 type AwardTableProps = {
     dataRows: DataRow[]
-    showPersonDetail: (row: DataRow) => void
-    showWorkDetail: (row: DataRow) => void
+    showDetail: (row: DataRow) => void
 }
 
-export default function AwardTable({dataRows, showPersonDetail, showWorkDetail}: AwardTableProps) {
-    const getGenderIcon = useCallback((gender: string) => {
-        switch (gender) {
-            case 'male':
-                return <Icon size='large' name='mars'/>
-            case 'female':
-                return <Icon size='large' name='venus'/>
-            default:
-                return <Icon size='large' name='genderless'/>
-        }
-    }, [])
+export default function AwardTable({dataRows, showDetail}: AwardTableProps) {
+    const rowsByCategory = useMemo(() => {
+        return groupBy(dataRows, 'category')
+    }, [dataRows])
 
-    const categoryCache = new Set()
-    const getCategoryRow = useCallback((row: DataRow) => {
-        if (categoryCache.has(row.category)) {
-            return null
-        } else {
-            categoryCache.add(row.category)
-            const rowspan = dataRows.filter(dataRow => dataRow.category === row.category).length
-            return <Table.Cell rowSpan={rowspan}>{row.category}</Table.Cell>
+    const categoryNamesDivided = useMemo(() => {
+        const categoriesDivided: Array<string[]> = []
+        const categories: string[] = Object.keys(rowsByCategory)
+        for(let i = 0; i < categories.length; i += 2)
+        {
+            categoriesDivided.push(categories.slice(i, i + 2));
         }
-    }, [dataRows, categoryCache])
+        return categoriesDivided
+    }, [rowsByCategory])
 
     return (
-        <div style={{height: window.innerHeight - 100, overflowY: 'scroll'}}>
-            <Table celled>
-                <Table.Header>
-                    <Table.Row>
-                        <Table.HeaderCell>Category</Table.HeaderCell>
-                        <Table.HeaderCell>Name</Table.HeaderCell>
-                        <Table.HeaderCell>Sex</Table.HeaderCell>
-                        <Table.HeaderCell>Work</Table.HeaderCell>
-                    </Table.Row>
-                </Table.Header>
-                <Table.Body>
-                    {dataRows.map((row, index) => {
-                        return (
-                            <Table.Row key={index}>
-                                {getCategoryRow(row)}
-                                <SelectableCell style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}} onClick={() => showPersonDetail(row)}>
-                                    <Image rounded avatar src={row["p:profilePath"]} size='mini' />
-                                    <div style={{marginLeft: '8px'}}>
-                                        {row.name}
-                                    </div>
-                                    {row.winner === 'True' ? 
-                                        <Icon name='winner' color='yellow' style={{marginLeft: '8px'}}/>
-                                    : ''}
-                                </SelectableCell>
-                                <Table.Cell>{getGenderIcon(row["p:gender"])}</Table.Cell>
-                                <SelectableCell onClick={() => showWorkDetail(row)}>{row.work}</SelectableCell>
-                            </Table.Row>
-                        )
-                    })}
-                </Table.Body>
-            </Table>
-        </div>
+        <Grid style={{maxHeight: window.innerHeight - 100, overflowY: 'scroll'}}>
+            {categoryNamesDivided.map((categoryNames: string[]) =>
+                <Grid.Row columns='2'>
+                    {categoryNames.map((categoryName: string) => 
+                        <Grid.Column>
+                            <Table celled>
+                                <Table.Header>
+                                    <Table.Row>
+                                        <Table.HeaderCell textAlign='center'>
+                                            {toProperCase(categoryName)}
+                                        </Table.HeaderCell>
+                                    </Table.Row>
+                                </Table.Header>
+                                <Table.Body>
+                                    {rowsByCategory[categoryName].map((row: DataRow, index: string) =>
+                                        <Table.Row key={index}>
+                                            <SelectableCell onClick={() => showDetail(row)}>
+                                                <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
+                                                    {row.winner === 'True' ? 
+                                                        <Icon name='winner' color='yellow'/>
+                                                    : ''}
+                                                    <Image rounded avatar src={row["p:profilePath"]} size='mini' style={{marginLeft: '8px'}}/>
+                                                    <div style={{marginLeft: '8px'}}>
+                                                        {row.name}<br/><i>{row.work}</i>
+                                                    </div>
+                                                </div>
+                                            </SelectableCell>
+                                        </Table.Row>    
+                                    )}
+                                </Table.Body>
+                            </Table>
+                        </Grid.Column>             
+                    )}
+                </Grid.Row>
+            )}
+        </Grid>
     )
 }

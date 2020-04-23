@@ -8,19 +8,19 @@ type WorkDetailProps = {
 
 export default function WorkDetail({dataRow}: WorkDetailProps) {
     return (
-        <Card style={{height: window.innerHeight - 100}}>
+        <>
             <Image src={dataRow["w:posterPath"]} wrapped ui={false} />
-            <Card.Content style={{height: '100%'}}>
+            <Card.Content>
                 <Card.Header>{dataRow.work}</Card.Header>
                 <Card.Meta>
                     <span>{dataRow["w:genreIds"]}</span>
                 </Card.Meta>
                 {dataRow["w:overview"] ?
-                    <Card.Description style={{height: '250px', overflowY: 'scroll'}}>
+                    <Card.Description style={{maxHeight: '150px', overflowY: 'scroll'}}>
                         {dataRow["w:overview"]}
                     </Card.Description>
                 : ''}
             </Card.Content>
-        </Card>
+        </>
     )
 }
