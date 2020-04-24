@@ -3,6 +3,7 @@ import { DataRow } from '../../types/Types'
 import { Label, Grid, Segment, Dropdown, Header } from 'semantic-ui-react'
 import { BarChart, YAxis, XAxis, Tooltip, Bar, AreaChart, Area, LabelList, Legend, TooltipPayload } from 'recharts'
 import { groupBy } from '../../utils/groupBy'
+import { toProperCase } from '../../utils/toProperCase'
 
 type ComparisonProps = {
     dataRows: DataRow[]
@@ -40,7 +41,7 @@ export default function Comparison({dataRows, onClick}: ComparisonProps) {
         index: number
     ) => {
         const text: any[] = []
-        text.push(<p>{value}</p>)
+        text.push(value)
         const currentYear: string = entry.payload.year
         const prevYear: string = String(Number(currentYear) - 1)
         const prevYearData = data.find(element => element.year === prevYear)
@@ -52,10 +53,10 @@ export default function Comparison({dataRows, onClick}: ComparisonProps) {
                 (cat: any) => !Array.from(prevYearData.categories).includes(cat)
             )
             if (plus.length > 0) {
-                text.push(<p>Added (compared to {prevYear}):<ul>{plus.map((el: any) => <li>{el}</li>)}</ul></p>)
+                text.push(<p>Added (compared to {prevYear}):<ul>{plus.map((el: any) => <li>{toProperCase(el)}</li>)}</ul></p>)
             }
             if (minus.length > 0) {
-                text.push(<p>Removed (compared to {prevYear}):<ul>{minus.map((el: any) => <li>{el}</li>)}</ul></p>)
+                text.push(<p>Removed (compared to {prevYear}):<ul>{minus.map((el: any) => <li>{toProperCase(el)}</li>)}</ul></p>)
             }
         }
         return (<div>{text.map((el: string) => el)}</div>)
@@ -64,13 +65,17 @@ export default function Comparison({dataRows, onClick}: ComparisonProps) {
     return (
         <>
             <Header>Comparisons</Header>
-            <Dropdown
-                fluid
-                selection
-                options={options.map(option => { return {key: option, text: option, value: option}})}
-                value={comparisonState}
-                onChange={(e, {value}) => setComparisonState('' + value)}
-            />
+            <div style={{display: 'flex', justifyContent: 'center'}}>
+                <div style={{width: '50%'}}>
+                    <Dropdown
+                        fluid
+                        selection
+                        options={options.map(option => { return {key: option, text: option, value: option}})}
+                        value={comparisonState}
+                        onChange={(e, {value}) => setComparisonState('' + value)}
+                    />
+                </div>
+            </div>
             {comparisonState === 'Gender' ?
                 <AreaChart 
                     width={800} 
@@ -78,6 +83,7 @@ export default function Comparison({dataRows, onClick}: ComparisonProps) {
                     data={data} 
                     onClick={handleClick} 
                     margin={{ top: 20, right: 80, left: 20, bottom: 5 }}
+                    style={{color: 'black'}}
                 >
                     <XAxis dataKey='year'/>
                     <YAxis yAxisId={0}>
@@ -122,6 +128,7 @@ export default function Comparison({dataRows, onClick}: ComparisonProps) {
                     data={data} 
                     onClick={handleClick} 
                     margin={{ top: 20, right: 80, left: 20, bottom: 5 }}
+                    style={{color: 'black'}}
                 >
                     <XAxis dataKey='year'/>
                     <YAxis yAxisId={0}/>

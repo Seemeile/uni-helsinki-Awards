@@ -16,8 +16,8 @@ export default function WorkDetail({dataRow}: WorkDetailProps) {
                     <span>{dataRow["w:genreIds"]}</span>
                 </Card.Meta>
                 {dataRow["w:overview"] ?
-                    <Card.Description style={{maxHeight: '300px', overflowY: 'scroll', scrollbarColor: 'white #1b1c1d'}}>
-                        {dataRow["w:overview"]}
+                    <Card.Description style={{maxHeight: '280px', overflowY: 'scroll', scrollbarColor: 'white #1b1c1d'}}>
+                        <br/>{dataRow["w:overview"]}
                     </Card.Description>
                 : ''}
             </Card.Content>
