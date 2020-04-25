@@ -182,7 +182,7 @@ export default function Dashboard() {
 
     const getBrushTicks = useMemo(() => {
         if (state.brush.data.length > 0) {
-            const widthPerTick = 900 / state.brush.data.length
+            const widthPerTick = (window.innerWidth / 1.5) / state.brush.data.length
             return state.brush.data.map(year => {
                 return {
                     value: year,
@@ -220,14 +220,14 @@ export default function Dashboard() {
                     </Dropdown.Menu>
                 </Dropdown>
                 <Menu.Item >
-                    <Surface width={900} height={50}>
+                    <Surface width={window.innerWidth / 1.5} height={50}>
                         <Brush
 
                             startIndex={state.brush.startIndex}
                             endIndex={state.brush.endIndex}
                             x={0}
                             y={10}
-                            width={900}
+                            width={window.innerWidth / 1.5}
                             height={30}
                             data={state.brush.data}
                             onChange={handleBrushUpdate}
@@ -236,7 +236,7 @@ export default function Dashboard() {
                             <CartesianAxis
                                 orientation='top'
                                 minTickGap={40}
-                                viewBox={{ x: 0, y: 0, width: 900, height: 30 }}
+                                viewBox={{ x: 0, y: 0, width: window.innerWidth / 1.5, height: 30 }}
                                 ticks={getBrushTicks}
                                 fontSize={10}
                             />

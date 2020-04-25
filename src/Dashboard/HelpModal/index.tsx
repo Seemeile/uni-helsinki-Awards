@@ -44,3 +44,8 @@ export default function HelpModal({open, handleHelpModalClose}: HelpModalProps) 
         </Modal>
     )
 }
+
+/*
+
+"Icon made by Eucalyp from www.flaticon.com"
+*/

@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React, { useMemo, useCallback } from 'react'
 import { Table, Image, Icon, Grid } from 'semantic-ui-react'
 import { DataRow } from '../../types/Types'
 import styled from 'styled-components'
@@ -8,7 +8,7 @@ import { toProperCase } from '../../utils/toProperCase'
 const SelectableCell = styled(Table.Cell)`
     @media (hover: hover) {
         :hover {
-            background: #f2f3f4;
+            background: rgba(255,255,255,.3);
             cursor: pointer;
         }
     }
@@ -34,6 +34,15 @@ export default function AwardTable({dataRows, showDetail}: AwardTableProps) {
         return categoriesDivided
     }, [rowsByCategory])
 
+    const getGenderSign = useCallback((gender: string) => {
+        if ('male' === gender) {
+            return <Icon name='mars'/>
+        } else if ('female' === gender) {
+            return <Icon name='venus'/>
+        }
+        return <Icon name='genderless'/>
+    }, [])
+
     return (
         <Grid style={{marginTop: '10px', maxHeight: window.innerHeight - 100, scrollbarColor: 'white #1b1c1d', overflowY: 'scroll'}}>
             {categoryNamesDivided.map((categoryNames: string[]) =>
@@ -58,7 +67,7 @@ export default function AwardTable({dataRows, showDetail}: AwardTableProps) {
                                                     : ''}
                                                     <Image rounded avatar src={row["p:profilePath"]} size='mini' style={{marginLeft: '8px'}}/>
                                                     <div style={{marginLeft: '8px'}}>
-                                                        {row.name}<br/><i>{row.work}</i>
+                                                        {row.name}{getGenderSign(row["p:gender"])}<br/><i>{row.work}</i>
                                                     </div>
                                                 </div>
                                             </SelectableCell>

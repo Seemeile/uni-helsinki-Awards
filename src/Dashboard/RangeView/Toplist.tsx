@@ -21,13 +21,13 @@ export default function Toplist({dataRows, onClick}: ToplistProps) {
                 return Object.keys(groupedWinners)
                     .map((name: any) => { return { name, value: groupedWinners[name].length }})
                     .sort((a, b) => b.value - a.value)
-                    .slice(0, 8)
+                    .slice(0, 6)
             case 'Most nominations by name':
                 const groupedNames: Array<any> = groupBy(dataRows, 'name')
                 return Object.keys(groupedNames)
                     .map((name: any) => { return { name, value: groupedNames[name].length }})
                     .sort((a, b) => b.value - a.value)
-                    .slice(0, 8)
+                    .slice(0, 6)
             default:
                 return []
         }
@@ -48,7 +48,7 @@ export default function Toplist({dataRows, onClick}: ToplistProps) {
                 </div>
             </div>
             <BarChart
-                width={450}
+                width={window.innerWidth / 3}
                 height={400}
                 data={getData()}
                 margin={{ top: 20, right: 20, bottom: 20, left: 30 }}
@@ -56,7 +56,7 @@ export default function Toplist({dataRows, onClick}: ToplistProps) {
                 style={{color: 'black'}}
             >
                 <XAxis dataKey='value' type='number' name='value'/>
-                <YAxis dataKey='name' type='category' name='name'/>
+                <YAxis dataKey='name' type='category' name='name' tickFormatter={(value: any) => value.replace(/-/g, ' ')}/>
                 <Tooltip />
                 <Bar dataKey='value' fill='#21ba45' maxBarSize={20} label radius={[10, 10, 10, 10]} />
             </BarChart>

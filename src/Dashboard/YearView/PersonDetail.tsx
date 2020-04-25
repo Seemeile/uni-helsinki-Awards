@@ -9,7 +9,7 @@ type PersonDetailProps = {
 export default function PersonDetail({dataRow}: PersonDetailProps) {
     return (
         <>
-            <Image src={dataRow["p:profilePath"]} wrapped ui={false} />
+            <Image src={dataRow["p:profilePath"]} wrapped ui={false}/>
             <Card.Content>
                 <Card.Header>{dataRow.name}</Card.Header>
                 {dataRow["p:knownForDepartment"] ? 
