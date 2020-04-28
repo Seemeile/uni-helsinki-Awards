@@ -120,7 +120,7 @@ export default function Comparison({dataRows, onClick}: ComparisonProps) {
                             )
                         }
                     }
-                    return (<div>{text.map((el: string) => el)}</div>)
+                    return (<>{text.map((el: string, index: number) => <div key={index}>{el}</div>)}</>)
                 }
                 return (
                     <AreaChart 

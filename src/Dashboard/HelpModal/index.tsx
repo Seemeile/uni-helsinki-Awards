@@ -1,13 +1,5 @@
-import React, { useCallback } from 'react'
-import { Button,
-    Divider,
-    Grid,
-    Header,
-    Icon,
-    Search,
-    Segment, 
-    Modal, 
-    Image} from 'semantic-ui-react'
+import React from 'react'
+import { Grid, Header, Segment, Modal, Image } from 'semantic-ui-react'
 import selectHelp from '../../data/selectHelp.jpg'
 import yearHelp from '../../data/yearHelp.jpg'
 import rangeHelp from '../../data/rangeHelp.jpg'
