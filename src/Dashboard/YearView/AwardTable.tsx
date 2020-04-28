@@ -64,8 +64,13 @@ export default function AwardTable({dataRows, showDetail}: AwardTableProps) {
                                                 <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
                                                     {row.winner === 'True' ? 
                                                         <Icon name='winner' color='yellow'/>
-                                                    : ''}
-                                                    <Image rounded avatar src={row["p:profilePath"]} size='mini' style={{marginLeft: '8px'}}/>
+                                                    : ''
+                                                    }
+                                                    {row["p:gender"] === '' || row["p:gender"] === 'other' || row["p:profilePath"].length === 0 ?
+                                                        <Image rounded src={row["w:posterPath"]} size='mini' style={{marginLeft: '8px'}}/>
+                                                    :
+                                                        <Image rounded avatar src={row["p:profilePath"]} size='mini' style={{marginLeft: '8px'}}/>
+                                                    }
                                                     <div style={{marginLeft: '8px'}}>
                                                         {row.name}{getGenderSign(row["p:gender"])}<br/><i>{row.work}</i>
                                                     </div>
