@@ -6,7 +6,11 @@ import { Button,
     Icon,
     Search,
     Segment, 
-    Modal } from 'semantic-ui-react'
+    Modal, 
+    Image} from 'semantic-ui-react'
+import selectHelp from '../../data/selectHelp.jpg'
+import yearHelp from '../../data/yearHelp.jpg'
+import rangeHelp from '../../data/rangeHelp.jpg'
 
 type HelpModalProps = {
     open: boolean
@@ -15,31 +19,35 @@ type HelpModalProps = {
 
 export default function HelpModal({open, handleHelpModalClose}: HelpModalProps) {
     return (
-        <Modal closeIcon open={open} onClose={handleHelpModalClose}>
+        <Modal basic dimmer='blurring' closeIcon open={open} onClose={handleHelpModalClose}>
             <Modal.Header>How to use</Modal.Header>
             <Modal.Content>
-                sources...
-                <Segment>
-                    <Grid columns={2} stackable textAlign='center'>
-                        <Divider vertical>Or</Divider>
+                <Grid columns={2} stackable textAlign='center'>
+                    <Grid.Column verticalAlign='middle'>
+                        <Segment inverted style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+                            <Image src={selectHelp} size='medium'/>
+                            <Header>1. Select a dataset</Header>
+                        </Segment>
+                    </Grid.Column>
+                    <Grid.Column>
                         <Grid.Row verticalAlign='middle'>
                             <Grid.Column>
-                                <Header icon>
-                                    <Icon name='search' />
-                                    Select a single year
-                                </Header>
-                                to show detailed information about that year
+                                <Segment inverted style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+                                    <Image src={yearHelp} size='small'/>
+                                    <Header>2. Shrink regulator to select a single year</Header>
+                                </Segment>
                             </Grid.Column>
-                            <Grid.Column>
-                                <Header icon>
-                                    <Icon name='world' />
-                                    Select a range of years
-                                </Header>
-                                to display history data
+                            <Grid.Column style={{marginTop: '5px'}}>
+                                <Segment inverted style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+                                    <Image src={rangeHelp} size='small'/>
+                                    <Header>3. Drag regulator to select a range of years</Header>
+                                </Segment>
                             </Grid.Column>
                         </Grid.Row>
-                    </Grid>
-            </Segment>
+                    </Grid.Column>
+                    Background Icon made by Eucalyp from www.flaticon.com
+                </Grid>
+                
             </Modal.Content>
         </Modal>
     )

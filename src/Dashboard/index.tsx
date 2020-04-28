@@ -59,7 +59,7 @@ const createInitialState = (): ReducerStateProps => {
             'w:posterPath': '',
             'w:genreIds': '',
             'w:popularity': '',
-            'w:overview': ''
+            'w:overview': 'Select a person to get detailed information'
         },
         brush: {
             data: [],
@@ -219,29 +219,32 @@ export default function Dashboard() {
                         <Dropdown.Item onClick={handleGoldenGlobeAwardsSelect}>Golden Globe Awards 1944 - 2020</Dropdown.Item>
                     </Dropdown.Menu>
                 </Dropdown>
-                <Menu.Item >
-                    <Surface width={window.innerWidth / 1.5} height={50}>
-                        <Brush
-
-                            startIndex={state.brush.startIndex}
-                            endIndex={state.brush.endIndex}
-                            x={0}
-                            y={10}
-                            width={window.innerWidth / 1.5}
-                            height={30}
-                            data={state.brush.data}
-                            onChange={handleBrushUpdate}
-                            tickFormatter={(index) => state.brush.data[index]}
-                        >
-                            <CartesianAxis
-                                orientation='top'
-                                minTickGap={40}
-                                viewBox={{ x: 0, y: 0, width: window.innerWidth / 1.5, height: 30 }}
-                                ticks={getBrushTicks}
-                                fontSize={10}
-                            />
-                        </Brush>
-                    </Surface>
+                <Menu.Item style={{width: window.innerWidth / 1.5}}>
+                    {state.dataset.length > 0 ? 
+                        <Surface width={window.innerWidth / 1.5} height={50}>
+                            <Brush
+                                startIndex={state.brush.startIndex}
+                                endIndex={state.brush.endIndex}
+                                x={0}
+                                y={10}
+                                width={window.innerWidth / 1.5}
+                                height={30}
+                                data={state.brush.data}
+                                onChange={handleBrushUpdate}
+                                tickFormatter={(index) => state.brush.data[index]}
+                            >
+                                <CartesianAxis
+                                    orientation='top'
+                                    minTickGap={40}
+                                    viewBox={{ x: 0, y: 0, width: window.innerWidth / 1.5, height: 30 }}
+                                    ticks={getBrushTicks}
+                                    fontSize={10}
+                                />
+                            </Brush>
+                        </Surface>
+                    :
+                        ''
+                    }
                 </Menu.Item>
                 <div style={{width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', color: 'white'}}>
                     {state.pending ?
@@ -282,30 +285,3 @@ export default function Dashboard() {
         </>
     )
 }
-
-/*
-<ForceGraph2D
-                            graphData={
-                                {
-                                    "nodes": [
-                                        { 'id': '2020' },
-                                        ...categories.map(category => { return { 'id': category} }),
-                                        ...persons.map(person => { return {'id': person}})
-                                    ],
-                                    "links": [
-                                        ...categories.map(category => { return { 'source': '2020', 'target': category }}),
-                                        ...personLinks
-                                    ]
-                                }
-                            }
-                            nodeLabel="id"
-                            nodeAutoColorBy='group'
-                            nodeCanvasObject={(node, ctx, globalScale) => {
-                                const fontSize = 12/globalScale;
-                                ctx.font = `${fontSize}px Sans-Serif`;
-                                ctx.textAlign = 'center'
-                                ctx.textBaseline = 'middle'
-                                ctx.fillText('' + node.id, node.x || 0, node.y || 0)
-                            }}
-                        />,
-*/
