@@ -7,7 +7,7 @@ import videoIcon from './data/video.svg'
 function App() {
   return (
     <div className="App" style={{
-      height: window.innerHeight,
+      minHeight: window.innerHeight,
       backgroundColor: 'rgb(0, 0, 0, 0.96)',
       backgroundImage: `url(${videoIcon})`,
       backgroundRepeat: 'no-repeat',
