@@ -4,7 +4,6 @@ import { Label, Dropdown, Header } from 'semantic-ui-react'
 import { YAxis, XAxis, Tooltip, AreaChart, Area, Legend, TooltipPayload } from 'recharts'
 import { groupBy } from '../../../utils/groupBy'
 import { toProperCase } from '../../../utils/toProperCase'
-import PopularityOfWinner from './PopularityOfWinner'
 
 type ComparisonProps = {
     dataRows: DataRow[]
@@ -14,8 +13,7 @@ type ComparisonProps = {
 const options = [
     'Gender distribution', 
     'Amount of Categories', 
-    'Average age of Nominees',
-    'Popularity of Winners compared to rivals'
+    'Average age of Nominees'
 ]
 
 export default function Comparison({dataRows, onClick}: ComparisonProps) {
@@ -180,8 +178,6 @@ export default function Comparison({dataRows, onClick}: ComparisonProps) {
                         />
                     </AreaChart>
                 )
-            case 'Popularity of Winners compared to rivals':
-                return <PopularityOfWinner years={years}/>
             default:
                 return <></>
         }

@@ -37,7 +37,10 @@ export default function HelpModal({open, handleHelpModalClose}: HelpModalProps) 
                             </Grid.Column>
                         </Grid.Row>
                     </Grid.Column>
-                    Background Icon made by Eucalyp from www.flaticon.com
+                    <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+                        <label>Datasets from www.kaggle.com, enriched with data from www.themoviedb.org</label>
+                        <label>Background Icon made by Eucalyp from www.flaticon.com</label>
+                    </div>
                 </Grid>
                 
             </Modal.Content>
