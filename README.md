@@ -21,7 +21,7 @@ In this project, three different data sources were aggregated from [https://www.
 - [https://www.kaggle.com/unanimad/the-oscar-award](https://www.kaggle.com/unanimad/the-oscar-award)
 - [https://www.kaggle.com/unanimad/emmy-awards](https://www.kaggle.com/unanimad/emmy-awards)
 
-The data was reordered to generate three normalized CSV files (see. [csv_transformer.py](https://github.com/Seemeile/uni-helsinki-Awards/tree/master/src/data/csv_transformer.py)). After that the files were enriched by person and movie information from [https://www.themoviedb.org](https://www.themoviedb.org) via their API at [https://www.kaggle.com/unanimad/emmy-awards](https://www.kaggle.com/unanimad/emmy-awards) (see. [imdb_scraper.py](https://github.com/Seemeile/uni-helsinki-Awards/tree/master/src/data/imdb_scraper.py)).
+The data was reordered to generate three normalized CSV files (see [csv_transformer.py](https://github.com/Seemeile/uni-helsinki-Awards/tree/master/src/data/csv_transformer.py)). After that the files were enriched by person and movie information from [https://www.themoviedb.org](https://www.themoviedb.org) via their API at [https://developers.themoviedb.org/3](https://developers.themoviedb.org/3) (see [imdb_scraper.py](https://github.com/Seemeile/uni-helsinki-Awards/tree/master/src/data/imdb_scraper.py)).
 
 ### build
 
