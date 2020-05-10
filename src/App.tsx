@@ -2,7 +2,7 @@ import React from 'react';
 import './App.css';
 import 'semantic-ui-css/semantic.min.css'
 import Dashboard from './Dashboard';
-import videoIcon from './data/video.svg'
+import videoIcon from './images/video.svg'
 
 function App() {
   return (

@@ -1,8 +1,8 @@
 import React from 'react'
 import { Grid, Header, Segment, Modal, Image } from 'semantic-ui-react'
-import selectHelp from '../../data/selectHelp.jpg'
-import yearHelp from '../../data/yearHelp.jpg'
-import rangeHelp from '../../data/rangeHelp.jpg'
+import selectHelp from '../../images/selectHelp.jpg'
+import yearHelp from '../../images/yearHelp.jpg'
+import rangeHelp from '../../images/rangeHelp.jpg'
 
 type HelpModalProps = {
     open: boolean
