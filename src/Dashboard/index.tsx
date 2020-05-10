@@ -214,8 +214,8 @@ export default function Dashboard() {
             <Menu inverted attached='top' size='large'>
                 <Dropdown item simple text={state.datasetTitle}>
                     <Dropdown.Menu>
-                        <Dropdown.Item onClick={handleOscarAwardsSelect}>Oscar Awards 1928 - 2020</Dropdown.Item>
-                        <Dropdown.Item onClick={handleEmmyAwardsSelect}>The Emmy Awards 1949 - 2019</Dropdown.Item>
+                        <Dropdown.Item onClick={handleOscarAwardsSelect}>Academy Awards 1928 - 2020</Dropdown.Item>
+                        <Dropdown.Item onClick={handleEmmyAwardsSelect}>Emmy Awards 1949 - 2019</Dropdown.Item>
                         <Dropdown.Item onClick={handleGoldenGlobeAwardsSelect}>Golden Globe Awards 1944 - 2020</Dropdown.Item>
                     </Dropdown.Menu>
                 </Dropdown>
